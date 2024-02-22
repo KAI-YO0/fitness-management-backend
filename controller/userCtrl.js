@@ -5,44 +5,19 @@ const hotelModel = require("../models/hotelModel");
 const hoteldetailModel = require("../models/hotelDetailModel");
 const groomingModel = require("../models/groomingModel");
 const contactModel = require("../models/contactModel");
-const employeeModel = require("../models/employeeModel");
+// const employeeModel = require("../models/employeeModel");
 const newsModel = require("../models/newsModel");
 const galleryModel = require("../models/galleryModel");
-const moment = require("moment");
+// const moment = require("moment");
 const nodemailer = require("nodemailer");
 
 // const { notifyLine } = require("../Functions/Notify");
 // const tokenLine = "5Ir6hjUjIQ6374TGO91Fv1DA7ewZlh5UQodcI8DU65N";
 
-module.exports = {
-  loginController,
-  signupController,
-  authController,
-  bookHotelController,
-  bookGroomingController,
-  getAllNotiController,
-  deleteAllNotiController,
-  getDetailHotelController,
-  myBookingController,
-  changePasswordController,
-  forgotPasswordController,
-  resetPasswordController,
-  getUserProfileController,
-  userEditController,
-  isRoomBooked,
-  isTimeBookedController,
-  isRoomBookedController,
-  deleteBookingHotelController,
-  sendContactController,
-  myBookingGroomingController,
-  deleteBookedGroomingController,
-  getNewsController,
-  getGallController,
-};
 
 const signupController = async (req, res) => {
   try {
-    const exisitingUser = await userModel.findOne({ email: req.body.email });
+    const exisitingUser = await userModel.findOne({ username: req.body.username });
     if (exisitingUser) {
       return res
         .status(200)
@@ -52,11 +27,19 @@ const signupController = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const newUser = new userModel({
-      name: req.body.name,
-      email: req.body.email,
-      phone: req.body.phone,
-      role: req.body.role,
+      username: req.body.username,
       password: hashedPassword,
+      email: req.body.email,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      id_card: req.body.id_card,
+      phone_number: req.body.phone_number,
+      address: req.body.address,
+      sex: req.body.sex,
+      image_url: req.body.image_url,
+      member_id: req.body.member_id,
+      role: req.body.role,
+
     });
     await newUser.save();
     res.status(201).send({ message: "Register Successfully", success: true });
@@ -71,7 +54,7 @@ const signupController = async (req, res) => {
 
 const loginController = async (req, res) => {
   try {
-    const user = await userModel.findOne({ email: req.body.email });
+    const user = await userModel.findOne({ username: req.body.username });
     if (!user) {
       return res
         .status(200)
@@ -756,3 +739,28 @@ const getGallController = async (req, res) => {
 };
 
 
+module.exports = {
+  signupController,
+  loginController,
+  authController,
+  bookHotelController,
+  bookGroomingController,
+  getAllNotiController,
+  deleteAllNotiController,
+  getDetailHotelController,
+  myBookingController,
+  changePasswordController,
+  forgotPasswordController,
+  resetPasswordController,
+  getUserProfileController,
+  userEditController,
+  isRoomBooked,
+  isTimeBookedController,
+  isRoomBookedController,
+  deleteBookingHotelController,
+  sendContactController,
+  myBookingGroomingController,
+  deleteBookedGroomingController,
+  getNewsController,
+  getGallController,
+};
