@@ -50,22 +50,22 @@ const userSchema = new mongoose.Schema({
         // required: [true, 'role is require'],
         default: "member"
     },
-    isMember: {
-        type: Boolean,
-        // default: false
-    },
-    isAdmin: {
-        type: Boolean,
-        // default: false
-    },
-    isEmployee: {
-        type: Boolean,
-        // default: false
-    },
-    isTrainer: {
-        type: Boolean,
-        // default: false
-    },
+    // isMember: {
+    //     type: Boolean,
+    //     // default: false
+    // },
+    // isAdmin: {
+    //     type: Boolean,
+    //     // default: false
+    // },
+    // isEmployee: {
+    //     type: Boolean,
+    //     // default: false
+    // },
+    // isTrainer: {
+    //     type: Boolean,
+    //     // default: false
+    // }
     notification: {
         type: Array,
         default: []

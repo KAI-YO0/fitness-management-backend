@@ -12,7 +12,7 @@ const path = require("path");
 
 const getAllUsersController = async (req, res) => {
   try {
-    const users = await userModel.find({ isAdmin: false, isEmployee: false });
+    const users = await userModel.find({ role: { $nin: ["admin", "employee"] } });
     res.status(200).send({
       success: true,
       message: "รายชื่อผู้ใช้",
