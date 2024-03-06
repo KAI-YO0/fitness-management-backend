@@ -30,7 +30,7 @@ const getAllUsersController = async (req, res) => {
 
 const getAllEmployeeController = async (req, res) => {
   try {
-    const employees = await userModel.find({ isEmployee: true });
+    const employees = await userModel.find({ role: "employee" });
     res.status(200).send({
       success: true,
       message: "รายชื่อพนักงาน",

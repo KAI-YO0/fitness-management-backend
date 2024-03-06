@@ -254,6 +254,10 @@ const isRoomBooked = async (name, description, startDate, endDate) => {
   }
 };
 
+
+// จอง Class
+
+
 const classBookedController = async (req, res) => {
   const { name, description, startDate, endDate } = req.query;
 
