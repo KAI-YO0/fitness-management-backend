@@ -47,23 +47,24 @@ const userSchema = new mongoose.Schema({
     role:{
         type: String,
         enum: ["member", "admin", "employee", "trainer"],
-        required: [true, 'role is require']
+        // required: [true, 'role is require'],
+        default: "member"
     },
     isMember: {
         type: Boolean,
-        default: false
+        // default: false
     },
     isAdmin: {
         type: Boolean,
-        default: false
+        // default: false
     },
     isEmployee: {
         type: Boolean,
-        default: false
+        // default: false
     },
     isTrainer: {
         type: Boolean,
-        default: false
+        // default: false
     },
     notification: {
         type: Array,

@@ -3,7 +3,7 @@ const {
     loginController, 
     signupController,
     authController, 
-    bookHotelController,
+    bookClassController,
     bookGroomingController, 
     getAllNotiController,
     deleteAllNotiController,
@@ -14,7 +14,7 @@ const {
     resetPasswordController,
     userEditController,
     getUserProfileController,
-    isRoomBookedController,
+    classBookedController,
     isTimeBookedController,
     deleteBookingHotelController,
     sendContactController,
@@ -35,9 +35,9 @@ router.post('/signup', signupController)
 //auth user
 router.post('/getUserData', auth, authController)
 
-//Booking Hotel
-router.get('/isRoomBooked', auth, isRoomBookedController)
-router.post('/bookHotel', auth, bookHotelController)
+//Booking Class
+router.get('/classBooked', auth, classBookedController)
+router.post('/bookClass', auth, bookClassController)
 
 //Booking Grooming
 router.get('/isTimeBooked', auth, isTimeBookedController)

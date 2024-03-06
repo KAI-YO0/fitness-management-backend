@@ -1,7 +1,7 @@
 const userModel = require("../models/userModels");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const hotelModel = require("../models/hotelModel");
+const classModel = require("../models/classModel");
 const hoteldetailModel = require("../models/hotelDetailModel");
 const groomingModel = require("../models/groomingModel");
 const contactModel = require("../models/contactModel");
@@ -148,13 +148,13 @@ const bookGroomingController = async (req, res) => {
     });
     await newGrooming.save();
 
-    const adminUser = await userModel.findOne({ isAdmin: true });
-    const employeeUsers = await userModel.find({ isEmployee: true });
+    const adminUser = await userModel.findOne({ role :"admin" });
+    const employeeUsers = await userModel.find({ role: "employee" });
     // const formatDate = moment(newGrooming.date).format("DD-MM-YYYY");
 
     const notificationAdmin = {
       type: "grooming-booking-request",
-      message: `มีการจองอาบน้ำ-ตัดขน
+      message: `มีการจองคลาสออกกำลังกาย
       Name: ${newGrooming.Name}
       Petname: ${newGrooming.PetName}
       Type_pet: ${newGrooming.pet_type}
@@ -222,9 +222,9 @@ const bookGroomingController = async (req, res) => {
   }
 };
 
-const isRoomBooked = async (roomType, roomNumber, startDate, endDate) => {
+const isRoomBooked = async (name, description, startDate, endDate) => {
   try {
-    const existingBooking = await hotelModel.findOne({
+    const existingBooking = await classModel.findOne({
       $or: [
         {
           $and: [
@@ -239,8 +239,8 @@ const isRoomBooked = async (roomType, roomNumber, startDate, endDate) => {
           ],
         },
       ],
-      roomType,
-      roomNumber,
+      name,
+      description,
     });
     return !!existingBooking;
   } catch (error) {
@@ -249,68 +249,69 @@ const isRoomBooked = async (roomType, roomNumber, startDate, endDate) => {
   }
 };
 
-const isRoomBookedController = async (req, res) => {
-  const { roomType, roomNumber, startDate, endDate } = req.query;
+const classBookedController = async (req, res) => {
+  const { name, description, startDate, endDate } = req.query;
 
   try {
-    const isBooked = await isRoomBooked(
-      roomType,
-      roomNumber,
+    const classBooked = await classBooked(
+      name,
+      description,
       startDate,
       endDate
     );
-    res.status(200).json({ isBooked });
+    res.status(200).json({ classBooked });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "เกิดข้อผิดพลาด" });
   }
 };
 
-const bookHotelController = async (req, res) => {
+const bookClassController = async (req, res) => {
   try {
     const userId = req.body.userId;
 
     if (
       await isRoomBooked(
-        req.body.roomType,
-        req.body.roomNumber,
+        req.body.name,
+        req.body.description,
         req.body.startDate,
         req.body.endDate
       )
     ) {
       return res.status(400).send({
         success: false,
-        message: "ห้องนี้ถูกจองแล้ว",
+        message: "คลาสนี้ถูกจองแล้ว",
       });
     }
 
-    const newHotel = await hotelModel({
+    const newClass = await classModel({
       ...req.body,
       userId: userId,
       status: "pending",
     });
-    await newHotel.save();
+    await newClass.save();
 
-    // const adminUser = await userModel.findOne({ isAdmin: true });
-    // const employeeUsers = await userModel.find({ isEmployee: true });
+    const adminUser = await userModel.find({ role : "admin" });
+    const employeeUsers = await userModel.find({ role: "employee" });
 
     const notificationAdmin = {
-      type: "hotel-booking-request",
-      message: `มีการจองโรงแรมแมว
-      Name: ${newHotel.Name}
-      Petname: ${newHotel.PetName}
-      Room type: ${newHotel.roomType}
-      Room number: ${newHotel.roomNumber}
-      Date: ${newHotel.startDate} - ${newHotel.endDate}
-      Check-in Time: ${newHotel.time} `,
+      type: "class-booking-request",
+      message: `มีการจองคลาสออกกำลังกาย
+      Name: ${newClass.name}
+      Description: ${newClass.description}
+      Motivations: ${newClass.motivations}
+      Intensity: ${newClass.intensity}
+      Minute: ${newClass.minute}
+      Date: ${newClass.startDate} - ${newClass.endDate}
+      Check-in Time: ${newClass.time} `,
       data: {
-        hotelId: newHotel._id,
-        name: newHotel.name + " " + newHotel.PetName,
-        onClickPath: "/admin/dashboard/hotel",
+        classId: newClass._id,
+        name: newClass.name,
+        onClickPath: "/admin/dashboard/class",
       },
     };
 
-    adminUser.notification.push(notificationAdmin);
+    ad.notification.push(notificationAdmin);
     await adminUser.save();
 
     if (!employeeUsers) {
@@ -319,17 +320,18 @@ const bookHotelController = async (req, res) => {
       for (const employeeUser of employeeUsers) {
         const notificationEmployee = {
           type: "hotel-booking-request",
-          message: `มีการจองโรงแรมแมว
-          Name: ${newHotel.Name}
-          Petname: ${newHotel.PetName}
-          Room type: ${newHotel.roomType}
-          Room number: ${newHotel.roomNumber}
-          Date: ${newHotel.startDate} - ${newHotel.endDate}
-          Check-in Time: ${newHotel.time} `,
+          message: `มีการจองคลาสออกกำลังกาย
+          Name: ${newClass.name}
+          Description: ${newClass.description}
+          Motivations: ${newClass.motivations}
+          Intensity: ${newClass.intensity}
+          Minute: ${newClass.minute}
+          Date: ${newClass.startDate} - ${newClass.endDate}
+          Check-in Time: ${newClass.time} `,
           data: {
-            hotelId: newHotel._id,
-            name: newHotel.name + " " + newHotel.PetName,
-            onClickPath: "/admin/dashboard/hotel",
+            classId: newClass._id,
+            name: newClass.name,
+            onClickPath: "/admin/dashboard/class",
           },
         };
 
@@ -347,19 +349,17 @@ const bookHotelController = async (req, res) => {
 
     res.status(201).send({
       success: true,
-      message: "จองสำเร็จแล้ว",
+      message: "จองสำเร็จ",
     });
 
-    //notify line
-    const text = notificationAdmin.message;
-    await notifyLine(tokenLine, text);
+
   } catch (error) {
     console.log(error);
     //
     if (error.code === 11000) {
       return res.status(400).send({
         success: false,
-        message: "ห้องนี้ถูกจองแล้ว",
+        message: "คลาสนี้ถูกจองแล้ว",
       });
     }
     //
@@ -743,7 +743,7 @@ module.exports = {
   signupController,
   loginController,
   authController,
-  bookHotelController,
+  bookClassController,
   bookGroomingController,
   getAllNotiController,
   deleteAllNotiController,
@@ -756,7 +756,7 @@ module.exports = {
   userEditController,
   isRoomBooked,
   isTimeBookedController,
-  isRoomBookedController,
+  classBookedController,
   deleteBookingHotelController,
   sendContactController,
   myBookingGroomingController,
