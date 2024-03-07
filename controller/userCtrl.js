@@ -36,8 +36,8 @@ const signupController = async (req, res) => {
       phone_number: req.body.phone_number,
       address: req.body.address,
       sex: req.body.sex,
-      image_url: req.body.image_url,
-      member_id: req.body.member_id,
+      // image_url: req.body.image_url,
+      // member_id: req.body.member_id,
       role: req.body.role,
       isMember: req.body.isMember,
       // isAdmin: req.body.isAdmin,
@@ -75,7 +75,7 @@ const loginController = async (req, res) => {
       expiresIn: "1d",
     });
 
-    res.status(200).send({ message: "Login Success", success: true, token });
+    res.status(200).send({ message: "Login Success", success: true, token , user });
   } catch (error) {
     console.log(error);
     res.status(500).send({ message: `Error in Login CTRL ${error.message}` });

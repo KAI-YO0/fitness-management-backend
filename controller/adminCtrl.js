@@ -398,7 +398,7 @@ const deleteHotelsController = async (req, res) => {
 const getUserCountController = async (req, res) => {
   try {
     const userCount = await userModel
-      .findOne({ isEmployee: false, isAdmin: false })
+      .findOne({ role: "member" })
       .countDocuments();
 
     res.status(200).send({

@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'password is require']
+        required: [true, 'password is require'],
     },
     email: {
         type: String,
@@ -27,22 +27,22 @@ const userSchema = new mongoose.Schema({
     },
     phone_number: {
         type: String,
-        required: [true, 'phone_number is require']
+        required: [true, 'phone_number is require'],
     },
     address: {
         type: String,
-        required: [true, 'address is require']
+        required: [true, 'address is require'],
     },
     sex: {
         type: String,
         enum: ['male', 'female'],
-        required: [true, 'sex is require']
+        required: [true, 'sex is require'],
     },
     image_url: {
         type: String,
     },member_id: {
         type: String,
-        required: [true, 'sex is require']
+        // required: [true, 'sex is require'],
     },
     role:{
         type: String,
