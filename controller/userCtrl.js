@@ -1,7 +1,7 @@
 const userModel = require("../models/userModels");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const classModel = require("../models/classModel");
+const classModel = require("../models/classModels");
 const hoteldetailModel = require("../models/hotelDetailModel");
 const groomingModel = require("../models/groomingModel");
 const contactModel = require("../models/contactModel");
@@ -15,6 +15,7 @@ const nodemailer = require("nodemailer");
 // const tokenLine = "5Ir6hjUjIQ6374TGO91Fv1DA7ewZlh5UQodcI8DU65N";
 
 
+// register
 const signupController = async (req, res) => {
   try {
     const exisitingUser = await userModel.findOne({ username: req.body.username });
@@ -106,6 +107,283 @@ const authController = async (req, res) => {
     });
   }
 };
+
+// Reset password 
+
+const changePasswordController = async (req, res) => {
+  const userId = req.body.userId;
+  const { oldPassword, newPassword } = req.body;
+
+  try {
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "ไม่พบผู้ใช้" });
+    }
+
+    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!passwordMatch) {
+      return res.status(401).send({ message: "รหัสผ่านเก่าไม่ถูกต้อง", success: false });
+    }
+    
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedNewPassword;
+    await user.save();
+
+    res.status(200).send({ message: "Password changed successfully", success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).swnd({ message: "ไม่สามารถเปลี่ยนรหัสผ่านได้", success: false });
+  }
+};
+
+const forgotPasswordController = async (req, res) => {
+  const { email } = req.body;
+  await userModel
+    .findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return res.send({ message: "ไม่พบผู้ใช้" });
+      }
+      const token = jwt.sign({ id: user._id }, "jwt_secret_key", {
+        expiresIn: "1d",
+      });
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        auth: {
+          user: "tanapumin.fo@gmail.com",
+          pass: "umvsulynvqfehyde",
+        },
+      });
+
+      var mailOptions = {
+        from: "tanapumin.fo@gmail.com",
+        to: email,
+        subject: "Reset Password Link",
+        text: `http://localhost:3000/reset-password/${user._id}/${token}`,
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log("Email send error:", error);
+        } else {
+          console.log("Email sent:", info.response);
+          return res.send({ success: true });
+        }
+      });
+      return res.send({ success: true });
+    })
+    .catch((error) => {
+      console.log(error);
+      return res.send({ message: "เกิดข้อผิดพลาด" });
+    });
+};
+
+const resetPasswordController = (req, res) => {
+  const { id, token } = req.params;
+  const { password } = req.body;
+
+  jwt.verify(token, "jwt_secret_key", (err, decode) => {
+    if (err) {
+      return res.send({
+        success: false,
+        message: "Error with token",
+      });
+    } else {
+      bcrypt
+        .hash(password, 10)
+        .then((hash) => {
+          userModel
+            .findByIdAndUpdate({ _id: id }, { password: hash })
+            .then((u) => res.send({ success: true }))
+            .catch((err) =>
+              res.send({
+                success: false,
+                message: "Hash Error",
+              })
+            );
+        })
+        .catch((err) =>
+          res.send({
+            success: false,
+            message: "Error to hash reset",
+          })
+        );
+    }
+  });
+};
+
+// Get User by ID
+
+const getUserProfileController = async (req, res) => {
+  try {
+    const user = await userModel.findById({ _id: req.body.userId });
+    res.status(200).send({
+      success: true,
+      message: "get user detail",
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "get user error",
+    });
+  }
+};
+
+// Edit User by ID
+
+const userEditController = async (req, res) => {
+  const { name, email, phone } = req.body;
+  try {
+    const user = await userModel.findOneAndUpdate(
+      { _id: req.body.userId },
+      { name, email, phone }
+    );
+    res.status(200).send({
+      success: true,
+      message: "แก้ไขข้อมูลสำเร็จ",
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.send({
+      success: false,
+      message: "แก้ไขข้อมูลไม่สำเร็จ",
+    });
+  }
+};
+
+
+
+const classBookedController = async (req, res) => {
+  const { name, description, startDate, endDate } = req.query;
+
+  try {
+    const classBooked = await classBooked(
+      name,
+      description,
+      startDate,
+      endDate
+    );
+    res.status(200).json({ classBooked });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "เกิดข้อผิดพลาด" });
+  }
+};
+
+const bookClassController = async (req, res) => {
+  try {
+    const userId = req.body.userId;
+
+    if (
+      await isRoomBooked(
+        req.body.name,
+        req.body.description,
+        req.body.startDate,
+        req.body.endDate
+      )
+    ) {
+      return res.status(400).send({
+        success: false,
+        message: "คลาสนี้ถูกจองแล้ว",
+      });
+    }
+
+    const newClass = await classModel({
+      ...req.body,
+      userId: userId,
+      status: "pending",
+    });
+    await newClass.save();
+
+    const adminUser = await userModel.find({ role : "admin" });
+    const employeeUsers = await userModel.find({ role: "employee" });
+
+    const notificationAdmin = {
+      type: "class-booking-request",
+      message: `มีการจองคลาสออกกำลังกาย
+      Name: ${newClass.name}
+      Description: ${newClass.description}
+      Motivations: ${newClass.motivations}
+      Intensity: ${newClass.intensity}
+      Minute: ${newClass.minute}
+      Date: ${newClass.startDate} - ${newClass.endDate}
+      Check-in Time: ${newClass.time} `,
+      data: {
+        classId: newClass._id,
+        name: newClass.name,
+        onClickPath: "/admin/dashboard/class",
+      },
+    };
+
+    ad.notification.push(notificationAdmin);
+    await adminUser.save();
+
+    if (!employeeUsers) {
+      console.log("Employee user not found.");
+    } else {
+      for (const employeeUser of employeeUsers) {
+        const notificationEmployee = {
+          type: "hotel-booking-request",
+          message: `มีการจองคลาสออกกำลังกาย
+          Name: ${newClass.name}
+          Description: ${newClass.description}
+          Motivations: ${newClass.motivations}
+          Intensity: ${newClass.intensity}
+          Minute: ${newClass.minute}
+          Date: ${newClass.startDate} - ${newClass.endDate}
+          Check-in Time: ${newClass.time} `,
+          data: {
+            classId: newClass._id,
+            name: newClass.name,
+            onClickPath: "/admin/dashboard/class",
+          },
+        };
+
+        employeeUser.notification.push(notificationEmployee);
+        await employeeUser.save();
+        console.log("Employee user found:", employeeUsers);
+      }
+    }
+
+    // Update notification for admin
+    await userModel.findOneAndUpdate(
+      { _id: adminUser._id },
+      { $push: { notification: notificationAdmin } }
+    );
+
+    res.status(201).send({
+      success: true,
+      message: "จองสำเร็จ",
+    });
+
+
+  } catch (error) {
+    console.log(error);
+    //
+    if (error.code === 11000) {
+      return res.status(400).send({
+        success: false,
+        message: "คลาสนี้ถูกจองแล้ว",
+      });
+    }
+    //
+    res.status(500).send({
+      success: false,
+      error,
+      message: "ไม่สามารถจองได้",
+    });
+  }
+};
+
+
+
+
+
+
 
 const isTimeBooked = async (time, date) => {
   try {
@@ -255,130 +533,7 @@ const isRoomBooked = async (name, description, startDate, endDate) => {
 };
 
 
-// จอง Class
 
-
-const classBookedController = async (req, res) => {
-  const { name, description, startDate, endDate } = req.query;
-
-  try {
-    const classBooked = await classBooked(
-      name,
-      description,
-      startDate,
-      endDate
-    );
-    res.status(200).json({ classBooked });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "เกิดข้อผิดพลาด" });
-  }
-};
-
-const bookClassController = async (req, res) => {
-  try {
-    const userId = req.body.userId;
-
-    if (
-      await isRoomBooked(
-        req.body.name,
-        req.body.description,
-        req.body.startDate,
-        req.body.endDate
-      )
-    ) {
-      return res.status(400).send({
-        success: false,
-        message: "คลาสนี้ถูกจองแล้ว",
-      });
-    }
-
-    const newClass = await classModel({
-      ...req.body,
-      userId: userId,
-      status: "pending",
-    });
-    await newClass.save();
-
-    const adminUser = await userModel.find({ role : "admin" });
-    const employeeUsers = await userModel.find({ role: "employee" });
-
-    const notificationAdmin = {
-      type: "class-booking-request",
-      message: `มีการจองคลาสออกกำลังกาย
-      Name: ${newClass.name}
-      Description: ${newClass.description}
-      Motivations: ${newClass.motivations}
-      Intensity: ${newClass.intensity}
-      Minute: ${newClass.minute}
-      Date: ${newClass.startDate} - ${newClass.endDate}
-      Check-in Time: ${newClass.time} `,
-      data: {
-        classId: newClass._id,
-        name: newClass.name,
-        onClickPath: "/admin/dashboard/class",
-      },
-    };
-
-    ad.notification.push(notificationAdmin);
-    await adminUser.save();
-
-    if (!employeeUsers) {
-      console.log("Employee user not found.");
-    } else {
-      for (const employeeUser of employeeUsers) {
-        const notificationEmployee = {
-          type: "hotel-booking-request",
-          message: `มีการจองคลาสออกกำลังกาย
-          Name: ${newClass.name}
-          Description: ${newClass.description}
-          Motivations: ${newClass.motivations}
-          Intensity: ${newClass.intensity}
-          Minute: ${newClass.minute}
-          Date: ${newClass.startDate} - ${newClass.endDate}
-          Check-in Time: ${newClass.time} `,
-          data: {
-            classId: newClass._id,
-            name: newClass.name,
-            onClickPath: "/admin/dashboard/class",
-          },
-        };
-
-        employeeUser.notification.push(notificationEmployee);
-        await employeeUser.save();
-        console.log("Employee user found:", employeeUsers);
-      }
-    }
-
-    // Update notification for admin
-    await userModel.findOneAndUpdate(
-      { _id: adminUser._id },
-      { $push: { notification: notificationAdmin } }
-    );
-
-    res.status(201).send({
-      success: true,
-      message: "จองสำเร็จ",
-    });
-
-
-  } catch (error) {
-    console.log(error);
-    //
-    if (error.code === 11000) {
-      return res.status(400).send({
-        success: false,
-        message: "คลาสนี้ถูกจองแล้ว",
-      });
-    }
-    //
-    res.status(500).send({
-      success: false,
-      error,
-      message: "ไม่สามารถจองได้",
-    });
-  }
-};
 
 const getAllNotiController = async (req, res) => {
   try {
@@ -537,146 +692,9 @@ const deleteBookedGroomingController = async (req, res) => {
   }
 };
 
-const changePasswordController = async (req, res) => {
-  const userId = req.body.userId;
-  const { oldPassword, newPassword } = req.body;
 
-  try {
-    const user = await userModel.findById(userId);
-    if (!user) {
-      return res.status(404).json({ message: "ไม่พบผู้ใช้" });
-    }
 
-    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!passwordMatch) {
-      return res.status(401).send({ message: "รหัสผ่านเก่าไม่ถูกต้อง", success: false });
-    }
-    
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedNewPassword;
-    await user.save();
 
-    res.status(200).send({ message: "Password changed successfully", success: true });
-  } catch (error) {
-    console.log(error);
-    res.status(500).swnd({ message: "ไม่สามารถเปลี่ยนรหัสผ่านได้", success: false });
-  }
-};
-
-const forgotPasswordController = async (req, res) => {
-  const { email } = req.body;
-  await userModel
-    .findOne({ email })
-    .then((user) => {
-      if (!user) {
-        return res.send({ message: "ไม่พบผู้ใช้" });
-      }
-      const token = jwt.sign({ id: user._id }, "jwt_secret_key", {
-        expiresIn: "1d",
-      });
-      var transporter = nodemailer.createTransport({
-        service: "gmail",
-        secure: true,
-        auth: {
-          user: "tanapumin.fo@gmail.com",
-          pass: "umvsulynvqfehyde",
-        },
-      });
-
-      var mailOptions = {
-        from: "tanapumin.fo@gmail.com",
-        to: email,
-        subject: "Reset Password Link",
-        text: `http://localhost:3000/reset-password/${user._id}/${token}`,
-      };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log("Email send error:", error);
-        } else {
-          console.log("Email sent:", info.response);
-          return res.send({ success: true });
-        }
-      });
-      return res.send({ success: true });
-    })
-    .catch((error) => {
-      console.log(error);
-      return res.send({ message: "เกิดข้อผิดพลาด" });
-    });
-};
-
-const resetPasswordController = (req, res) => {
-  const { id, token } = req.params;
-  const { password } = req.body;
-
-  jwt.verify(token, "jwt_secret_key", (err, decode) => {
-    if (err) {
-      return res.send({
-        success: false,
-        message: "Error with token",
-      });
-    } else {
-      bcrypt
-        .hash(password, 10)
-        .then((hash) => {
-          userModel
-            .findByIdAndUpdate({ _id: id }, { password: hash })
-            .then((u) => res.send({ success: true }))
-            .catch((err) =>
-              res.send({
-                success: false,
-                message: "Hash Error",
-              })
-            );
-        })
-        .catch((err) =>
-          res.send({
-            success: false,
-            message: "Error to hash reset",
-          })
-        );
-    }
-  });
-};
-
-const getUserProfileController = async (req, res) => {
-  try {
-    const user = await userModel.findById({ _id: req.body.userId });
-    res.status(200).send({
-      success: true,
-      message: "get user detail",
-      data: user,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "get user error",
-    });
-  }
-};
-
-const userEditController = async (req, res) => {
-  const { name, email, phone } = req.body;
-  try {
-    const user = await userModel.findOneAndUpdate(
-      { _id: req.body.userId },
-      { name, email, phone }
-    );
-    res.status(200).send({
-      success: true,
-      message: "แก้ไขข้อมูลสำเร็จ",
-      data: user,
-    });
-  } catch (error) {
-    console.log(error);
-    res.send({
-      success: false,
-      message: "แก้ไขข้อมูลไม่สำเร็จ",
-    });
-  }
-};
 
 const sendContactController = async (req, res) => {
   const { name, email, message } = req.body;
@@ -749,27 +767,35 @@ const getGallController = async (req, res) => {
 
 
 module.exports = {
+
   signupController,
   loginController,
   authController,
+
+  changePasswordController,
+  forgotPasswordController,
+  resetPasswordController,
+
+  getUserProfileController,
+  userEditController,
+
+  classBookedController,
   bookClassController,
+
   bookGroomingController,
   getAllNotiController,
   deleteAllNotiController,
   getDetailHotelController,
   myBookingController,
-  changePasswordController,
-  forgotPasswordController,
-  resetPasswordController,
-  getUserProfileController,
-  userEditController,
+  
   isRoomBooked,
   isTimeBookedController,
-  classBookedController,
+  
   deleteBookingHotelController,
   sendContactController,
   myBookingGroomingController,
   deleteBookedGroomingController,
   getNewsController,
   getGallController,
+  // createClassController
 };

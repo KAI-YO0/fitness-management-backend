@@ -1,4 +1,5 @@
 const userModel = require("../models/userModels");
+const classModel = require("../models/classModels");
 const hotelDetailModel = require("../models/hotelDetailModel");
 const employeeModel = require("../models/employeeModel");
 const hotelModel = require("../models/hotelModel");
@@ -9,6 +10,7 @@ const path = require("path");
 
 
 
+// Get All User
 
 const getAllUsersController = async (req, res) => {
   try {
@@ -28,6 +30,8 @@ const getAllUsersController = async (req, res) => {
   }
 };
 
+// Get All Employee
+
 const getAllEmployeeController = async (req, res) => {
   try {
     const employees = await userModel.find({ role: "employee" });
@@ -45,6 +49,52 @@ const getAllEmployeeController = async (req, res) => {
     });
   }
 };
+
+// Get All Trainer
+
+const getAllTrainerController = async (req, res) => {
+  try {
+    const trainers = await userModel.find({ role: "trainer" });
+    res.status(200).send({
+      success: true,
+      message: "รายชื่อเทรนเนอร์",
+      data: trainers,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
+// Create  Classes
+
+const createClassController = async (req, res) => {
+  try {
+    const newClass = new classModel({
+      userId: req.body.userId,
+      name: req.body.name,
+      description: req.body.description,
+      motivations: req.body.motivations,
+      intensity: req.body.intensity,
+      minute: req.body.minute,
+      date: new Date(req.body.date),
+    });
+    await newClass.save();
+    res.status(201).send({ message: "สร้างคลาสสำเร็จ", success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: `${error.message}`,
+    });
+  }
+};
+
+//
 
 const createNewsController = async (req, res) => {
   try {
@@ -880,6 +930,10 @@ const sendBookingHistory = async (req, res) => {
 module.exports = {
   getAllUsersController,
   getAllEmployeeController,
+  getAllTrainerController,
+
+  createClassController,
+
   createHotelController,
   getHotelController,
   editHotelController,

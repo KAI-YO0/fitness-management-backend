@@ -30,18 +30,22 @@ const classSchema = new mongoose.Schema(
       enum: [30,45,60,75,90],
       required: true,
     },
-    startDate: {
-      type: Object,
-      required: true,
-    },
-    endDate: {
-      type: Object,
-      required: true,
-    },
-    status: {
-      type: String,
-      default: "pending",
-    },
+    date: {
+      type: Date , 
+      require: true
+    }
+    // startDate: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // endDate: {
+    //   type: Object,
+    //   required: true,
+    // },
+    // status: {
+    //   type: String,
+    //   default: "pending",
+    // },
   },
   { timestamps: true }
 );
