@@ -7,6 +7,8 @@ const {
   getAllEmployeeController,
   getAllTrainerController,
   createClassController,
+  bookClassController,
+
 
   createHotelController,
   getHotelController,
@@ -72,6 +74,7 @@ router.get('/getAllTrainers', auth, getAllTrainerController);
 
 // class
 router.post('/createClasses', auth, createClassController);
+router.post('/bookClasses', auth, bookClassController);
 
 //news
 router.post('/createNews', auth, upload.single('filename'), createNewsController);

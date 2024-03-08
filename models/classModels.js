@@ -34,21 +34,9 @@ const classSchema = new mongoose.Schema(
       type: Date , 
       require: true
     }
-    // startDate: {
-    //   type: Object,
-    //   required: true,
-    // },
-    // endDate: {
-    //   type: Object,
-    //   required: true,
-    // },
-    // status: {
-    //   type: String,
-    //   default: "pending",
-    // },
   },
   { timestamps: true }
 );
 
-const classModel = mongoose.model("classesFitness", classSchema);
+const classModel = mongoose.model("classes", classSchema);
 module.exports = classModel;

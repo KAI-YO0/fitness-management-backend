@@ -1,5 +1,6 @@
 const userModel = require("../models/userModels");
 const classModel = require("../models/classModels");
+const classHasUserModel = require("../models/classHasUserModels");
 const hotelDetailModel = require("../models/hotelDetailModel");
 const employeeModel = require("../models/employeeModel");
 const hotelModel = require("../models/hotelModel");
@@ -94,7 +95,51 @@ const createClassController = async (req, res) => {
   }
 };
 
-//
+// Book Class
+
+const bookClassController = async (req, res) => {
+  const classId = req.header('classId');
+  const { userId } = req.body;
+
+  try {
+    // Find the class by ID
+    const existingClass = await classModel.findById(classId);
+
+    if (!existingClass) {
+      return res.status(404).json({ success: false, message: 'Class not found' });
+    }
+
+    // Find the user by their ID
+    const userToAdd = await userModel.findById(userId);
+
+    if (!userToAdd) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Create a new entry in the classHasUser model
+    const classHasUserEntry = new classHasUserModel({
+      classId: existingClass._id,
+      userId: userToAdd._id,
+    });
+
+    // Save the classHasUser entry
+    await classHasUserEntry.save();
+
+    // Add the user to the class
+    if (existingClass.users) {
+      existingClass.users.push(userToAdd._id);
+    } else {
+      existingClass.users = [userToAdd._id];
+    }
+    
+    await existingClass.save();
+
+    res.status(200).json({ success: true, message: 'User added to the class successfully' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};
 
 const createNewsController = async (req, res) => {
   try {
@@ -933,6 +978,7 @@ module.exports = {
   getAllTrainerController,
 
   createClassController,
+  bookClassController,
 
   createHotelController,
   getHotelController,
