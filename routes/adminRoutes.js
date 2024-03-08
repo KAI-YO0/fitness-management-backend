@@ -5,6 +5,9 @@ const path = require('path');
 const {
   getAllUsersController,
   getAllEmployeeController,
+  getAllTrainerController,
+  createClassController,
+
   createHotelController,
   getHotelController,
   editHotelController,
@@ -65,6 +68,10 @@ const upload = multer({
 //get user&employee
 router.get('/getAllUsers', auth, getAllUsersController);
 router.get('/getAllEmployees', auth, getAllEmployeeController);
+router.get('/getAllTrainers', auth, getAllTrainerController);
+
+// class
+router.post('/createClasses', auth, createClassController);
 
 //news
 router.post('/createNews', auth, upload.single('filename'), createNewsController);
