@@ -8,6 +8,9 @@ const {
   getAllTrainerController,
   createClassController,
   bookClassController,
+  editRoleUserController,
+  updateRoleUserController,
+  deleteUserController,
 
 
   createHotelController,
@@ -21,9 +24,6 @@ const {
   changeStatusController,
   statusBookHotelController,
   statusBookGroomingController,
-  editUserController,
-  updateUserController,
-  deleteUserController,
   editEmployeeController,
   updateEmployeeController,
   getAllbookingHotelsController,
@@ -78,6 +78,11 @@ router.get('/getAllTrainers', auth, getAllTrainerController);
 router.post('/createClasses', auth, createClassController);
 router.post('/bookClasses', auth, bookClassController);
 
+//admin get users
+router.get('/editUser', auth, editRoleUserController);
+router.put('/updateUser', auth, updateRoleUserController);
+router.delete('/deleteUser', auth, deleteUserController);
+
 //news
 router.post('/createNews', auth, upload.single('filename'), createNewsController);
 router.get('/getNews', auth, getNewsController);
@@ -120,11 +125,6 @@ router.put('/updateBookGrooming/:id', auth, updateBookGroomingController);
 router.post('/changeStatus', auth, changeStatusController);
 router.post('/statusBookHotel', auth, statusBookHotelController);
 router.post('/statusBookGrooming', auth, statusBookGroomingController);
-
-//admin get users
-router.get('/editUser/:id', auth, editUserController);
-router.put('/updateUser/:id', auth, updateUserController);
-router.delete('/deleteUser/:id', auth, deleteUserController);
 
 //admin get employees
 router.get('/editEmployee/:id', auth, editEmployeeController);

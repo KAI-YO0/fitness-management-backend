@@ -141,6 +141,77 @@ const bookClassController = async (req, res) => {
   }
 };
 
+// Edit Role User
+const editRoleUserController = async (req, res) => {
+  try {
+    const id = req.header('userId');
+    const user = await userModel.findById({ _id: id });
+
+    if (user) {
+      res.status(200).send({
+        success: true,
+        message: "ดึงข้อมูลผู้ใช้สำเร็จ",
+        data: user,
+      });
+    } else {
+      res.status(404).send({
+        success: false,
+        message: "ไม่พบผู้ใช้",
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+    });
+  }
+};
+
+// Update Role User
+const updateRoleUserController = async (req, res) => {
+  try {
+    const id = req.header('userId');
+    const {role} = req.body;
+    const updateUser = await userModel.findByIdAndUpdate(
+      { _id: id },
+      {role}
+    );
+    res.status(200).send({
+      success: true,
+      message: "แก้ไขข้อมูลผู้ใช้สำเร็จ",
+      data: updateUser,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "แก้ไขข้อมูลผู้ใช้ไม่สำเร็จ",
+    });
+  }
+};
+
+// Delete User
+const deleteUserController = async (req, res) => {
+  try {
+    const id = req.header('userId');
+    const user = await userModel.findByIdAndDelete({ _id: id });
+    res.status(200).send({
+      success: true,
+      message: "ลบข้อมูลผู้ใช้สำเร็จ",
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ลบข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+
 const createNewsController = async (req, res) => {
   try {
     await newsModel.create({
@@ -159,6 +230,7 @@ const createNewsController = async (req, res) => {
     });
   }
 };
+
 
 const editNewsController = async (req, res) => {
   try {
@@ -702,85 +774,7 @@ const statusBookGroomingController = async (req, res) => {
   }
 };
 
-const editUserController = async (req, res) => {
-  try {
-    const id = req.params.id;
 
-    const user = await userModel.findById({ _id: id });
-
-    if (user) {
-      res.status(200).send({
-        success: true,
-        message: "ดึงข้อมูลผู้ใช้สำเร็จ",
-        data: user,
-      });
-    } else {
-      res.status(404).send({
-        success: false,
-        message: "ไม่พบผู้ใช้",
-      });
-    }
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
-    });
-  }
-};
-
-const updateUserController = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const { role } = req.body; // เฉพาะ role ที่ต้องการอัปเดต
-
-    // ใช้ findByIdAndUpdate เพื่ออัปเดตเฉพาะฟิลด์ role เท่านั้น
-    const updateUser = await userModel.findByIdAndUpdate(
-      id,
-      { role },
-      { new: true } // ตั้งค่า new เป็น true เพื่อให้ MongoDB ส่งค่าของเอกสารหลังจากการอัปเดตกลับมา
-    );
-
-    // ตรวจสอบว่ามีผู้ใช้หรือไม่
-    if (!updateUser) {
-      return res.status(404).send({
-        success: false,
-        message: "ไม่พบผู้ใช้",
-      });
-    }
-
-    res.status(200).send({
-      success: true,
-      message: "แก้ไขข้อมูลผู้ใช้สำเร็จ",
-      data: updateUser,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "แก้ไขข้อมูลผู้ใช้ไม่สำเร็จ",
-    });
-  }
-};
-
-const deleteUserController = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const user = await userModel.findByIdAndDelete({ _id: id });
-    res.status(200).send({
-      success: true,
-      message: "ลบข้อมูลผู้ใช้สำเร็จ",
-      data: user,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "ลบข้อมูลผู้ใช้ไม่สำเร็จ",
-      error,
-    });
-  }
-};
 
 const editEmployeeController = async (req, res) => {
   try {
@@ -1040,6 +1034,10 @@ module.exports = {
   createClassController,
   bookClassController,
 
+  editRoleUserController,
+  updateRoleUserController,
+  deleteUserController,
+
   createHotelController,
   getHotelController,
   editHotelController,
@@ -1051,9 +1049,7 @@ module.exports = {
   changeStatusController,
   statusBookHotelController,
   statusBookGroomingController,
-  editUserController,
-  updateUserController,
-  deleteUserController,
+  
   editEmployeeController,
   updateEmployeeController,
   getAllbookingHotelsController,
