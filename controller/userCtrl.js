@@ -38,7 +38,7 @@ const signupController = async (req, res) => {
       sex: req.body.sex,
       // image_url: req.body.image_url,
       // member_id: req.body.member_id,
-      role: req.body.role,
+      // role: req.body.role,
       isMember: req.body.isMember,
       // isAdmin: req.body.isAdmin,
       // isEmployee: req.body.isEmployee,
