@@ -79,9 +79,9 @@ router.post('/createClasses', auth, createClassController);
 router.post('/bookClasses', auth, bookClassController);
 
 //admin get users
-router.get('/editUser', auth, editRoleUserController);
-router.put('/updateUser', auth, updateRoleUserController);
-router.delete('/deleteUser', auth, deleteUserController);
+router.get('/editUser/:id', auth, editRoleUserController);
+router.put('/updateUser/:id', auth, updateRoleUserController);
+router.delete('/deleteUser/:id', auth, deleteUserController);
 
 //news
 router.post('/createNews', auth, upload.single('filename'), createNewsController);
@@ -127,7 +127,7 @@ router.post('/statusBookHotel', auth, statusBookHotelController);
 router.post('/statusBookGrooming', auth, statusBookGroomingController);
 
 //admin get employees
-router.get('/editEmployee/:id', auth, editEmployeeController);
+// router.get('/editEmployee/:id', auth, editEmployeeController);
 router.put('/updateEmployee/:id', auth, updateEmployeeController);
 
 //Booking Hotel
