@@ -235,11 +235,13 @@ const getUserProfileController = async (req, res) => {
 // Edit User by ID
 
 const userEditController = async (req, res) => {
-  const { name, email, phone } = req.body;
+  const { username, password , email , firstname , lastname , id_card ,  phone_number ,
+    address , sex , role , member_id } = req.body;
   try {
     const user = await userModel.findOneAndUpdate(
       { _id: req.body.userId },
-      { name, email, phone }
+      { username, password , email , firstname , lastname , id_card ,  phone_number ,
+        address , sex , role , member_id }
     );
     res.status(200).send({
       success: true,
