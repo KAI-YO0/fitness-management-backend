@@ -40,7 +40,7 @@ const signupController = async (req, res) => {
       // image_url: req.body.image_url,
       // member_id: req.body.member_id,
       // role: req.body.role,
-      isMember: req.body.isMember,
+      // isMember: req.body.isMember,
       // isAdmin: req.body.isAdmin,
       // isEmployee: req.body.isEmployee,
       // isTrainer: req.body.isTrainer,

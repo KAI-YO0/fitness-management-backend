@@ -583,6 +583,54 @@ const getUserCountController = async (req, res) => {
   }
 };
 
+//CountTrainer
+const getTrainerCountController = async (req, res) => {
+  try {
+    const userCount = await userModel
+      .findOne({ role: "trainer" })
+      .countDocuments();
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: userCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+//CountAlluser
+const getAlluserCountController = async (req, res) => {
+  try {
+    const userCount = await userModel.countDocuments({
+      $or: [
+        { role: "trainer" },
+        { role: "member" },
+        { role: "employee" },
+      ]
+    })
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: userCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
 const getBookHotelCountController = async (req, res) => {
   try {
     const BookingHotelCount = await hotelModel.countDocuments();
@@ -1023,4 +1071,6 @@ module.exports = {
   editGallController,
   updateGallController,
   deleteGallController,
+  getTrainerCountController,
+  getAlluserCountController,
 };
