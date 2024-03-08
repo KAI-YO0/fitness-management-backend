@@ -45,6 +45,8 @@ const {
   editGallController,
   updateGallController,
   deleteGallController,
+  getTrainerCountController,
+  getAlluserCountController,
 
 } = require('../controller/adminCtrl');
 
@@ -102,8 +104,11 @@ router.get('/getBookingHistory', auth, sendBookingHistory);
 
 //count dashboard
 router.get('/getUserCount', auth, getUserCountController);
+router.get('/getTrainerCount', auth, getTrainerCountController);
+router.get('/getAlluserCount', auth, getAlluserCountController);
 router.get('/getBookHotelCount', auth, getBookHotelCountController);
 router.get('/getBookGroomingCount', auth, getBookGroomingCountController);
+
 
 //Booking Grooming
 router.get('/allBookedGrooming', auth, getAllbookingGroomingController);
