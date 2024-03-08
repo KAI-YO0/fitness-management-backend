@@ -277,7 +277,6 @@ const classBookedController = async (req, res) => {
 const bookClassController = async (req, res) => {
   try {
     const userId = req.body.userId;
-
     if (
       await isRoomBooked(
         req.body.name,

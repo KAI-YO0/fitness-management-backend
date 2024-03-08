@@ -15,7 +15,7 @@ const path = require("path");
 
 const getAllUsersController = async (req, res) => {
   try {
-    const users = await userModel.find({ role: { $nin: ["admin", "employee"] } });
+    const users = await userModel.find({ role: { $nin: ["admin"] } });
     res.status(200).send({
       success: true,
       message: "รายชื่อผู้ใช้",
@@ -732,11 +732,23 @@ const editUserController = async (req, res) => {
 const updateUserController = async (req, res) => {
   try {
     const id = req.params.id;
-    const { name, email, phone } = req.body;
+    const { role } = req.body; // เฉพาะ role ที่ต้องการอัปเดต
+
+    // ใช้ findByIdAndUpdate เพื่ออัปเดตเฉพาะฟิลด์ role เท่านั้น
     const updateUser = await userModel.findByIdAndUpdate(
-      { _id: id },
-      { name, email, phone }
+      id,
+      { role },
+      { new: true } // ตั้งค่า new เป็น true เพื่อให้ MongoDB ส่งค่าของเอกสารหลังจากการอัปเดตกลับมา
     );
+
+    // ตรวจสอบว่ามีผู้ใช้หรือไม่
+    if (!updateUser) {
+      return res.status(404).send({
+        success: false,
+        message: "ไม่พบผู้ใช้",
+      });
+    }
+
     res.status(200).send({
       success: true,
       message: "แก้ไขข้อมูลผู้ใช้สำเร็จ",
