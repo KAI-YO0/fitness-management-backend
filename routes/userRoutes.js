@@ -22,6 +22,7 @@ const {
     deleteBookedGroomingController,
     getNewsController,
     getGallController,
+    paymentController,
 } = require('../controller/userCtrl');
 const auth = require('../middlewares/auth');
 
@@ -73,6 +74,9 @@ router.post('/editUser', auth, userEditController)
 
 //send contact
 router.post('/sendContact', auth, sendContactController)
+
+//payment
+router.post('/payment', auth,  paymentController)
 
 
 module.exports = router;

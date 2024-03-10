@@ -10,6 +10,8 @@ const newsModel = require("../models/newsModel");
 const galleryModel = require("../models/galleryModel");
 // const moment = require("moment");
 const nodemailer = require("nodemailer");
+const payment = require("../models/payment");
+const { count } = require("../models/classHasUserModels");
 
 // const { notifyLine } = require("../Functions/Notify");
 // const tokenLine = "5Ir6hjUjIQ6374TGO91Fv1DA7ewZlh5UQodcI8DU65N";
@@ -256,6 +258,36 @@ const userEditController = async (req, res) => {
     });
   }
 };
+
+//payment
+const paymentController = async (req, res) => {
+  try {
+    // ตรวจสอบว่า req.body มีค่าและมี property 'image' หรือไม่
+    if (req.body && req.body.image) {
+      const newPayment = new payment({
+        email: req.body.email,
+        address: req.body.address,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        phoneNumber: req.body.phoneNumber,
+        imageType: req.body.imageType,
+      });
+
+      // บันทึกข้อมูลลงในฐานข้อมูล
+      await newPayment.save();
+
+      // ส่งข้อมูลการบันทึกเป็น JSON กลับไป
+      res.status(201).json({ success: true, message: "Payment success" });
+    } else {
+      // ถ้าไม่มี req.body หรือไม่มี property 'image'
+      res.status(400).json({ success: false, message: "Invalid request data" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 
 
 
@@ -798,5 +830,6 @@ module.exports = {
   deleteBookedGroomingController,
   getNewsController,
   getGallController,
+  paymentController,
   // createClassController
 };
