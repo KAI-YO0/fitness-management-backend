@@ -24,8 +24,8 @@ const reserveClassSchema = new mongoose.Schema({
     type: String,
   },
   classDate: {
-    type: Date , 
-    require: true
+    type: String , 
+    
   },
   // phoneNumber: {
   //   type: String,
