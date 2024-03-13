@@ -12,7 +12,7 @@ const galleryModel = require("../models/galleryModel");
 const nodemailer = require("nodemailer");
 const payment = require("../models/payment");
 const { count } = require("../models/classHasUserModels");
-const reserve = require("../models/reserve");
+const reserve = require("../models/reserveClassModel");
 
 // const { notifyLine } = require("../Functions/Notify");
 // const tokenLine = "5Ir6hjUjIQ6374TGO91Fv1DA7ewZlh5UQodcI8DU65N";
@@ -291,11 +291,12 @@ const paymentController = async (req, res) => {
 };
 
 
-//reserve 
-const reserveController = async (req, res) => {
+// Class reserve 
+const reserveClassController = async (req, res) => {
   try {
     // ค้นหาผู้ใช้จาก userId
     const user = await userModel.findById(req.body.userId);
+    const classes = await classModel.findById(req.body.classId);
 
     if (!user) {
       return res.status(404).send({ message: "User not found", success: false });
@@ -303,11 +304,14 @@ const reserveController = async (req, res) => {
 
     const newreserve = new reserve({
       userId: req.body.userId,
+      classId: req.body.classId,
       firstname: user.firstname,
-      lastname:user.lastname, // เพิ่มการดึงชื่อผู้ใช้ (username) จากข้อมูลผู้ใช้
-      SelectClass: req.body.SelectClass,
-      SelectDay: req.body.SelectDay,
-      phoneNumber: req.body.phoneNumber,
+      lastname: user.lastname,
+      className: classes.name,
+      classDate: classes.date,
+      // SelectClass: req.body.SelectClass,
+      // SelectDay: req.body.SelectDay,
+      // phoneNumber: req.body.phoneNumber,
     });
 
     await newreserve.save();
@@ -861,6 +865,6 @@ module.exports = {
   getNewsController,
   getGallController,
   paymentController,
-  reserveController,
+  reserveClassController,
   // createClassController
 };

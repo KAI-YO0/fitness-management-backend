@@ -82,7 +82,7 @@ const createClassController = async (req, res) => {
       motivations: req.body.motivations,
       intensity: req.body.intensity,
       minute: req.body.minute,
-      date: new Date(req.body.date),
+      date: req.body.date,
     });
     await newClass.save();
     res.status(201).send({ message: "สร้างคลาสสำเร็จ", success: true });
