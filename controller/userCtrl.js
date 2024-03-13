@@ -12,6 +12,7 @@ const galleryModel = require("../models/galleryModel");
 const nodemailer = require("nodemailer");
 const payment = require("../models/payment");
 const { count } = require("../models/classHasUserModels");
+const reserve = require("../models/reserve");
 
 // const { notifyLine } = require("../Functions/Notify");
 // const tokenLine = "5Ir6hjUjIQ6374TGO91Fv1DA7ewZlh5UQodcI8DU65N";
@@ -51,7 +52,8 @@ const signupController = async (req, res) => {
     });
     await newUser.save();
     res.status(201).send({ message: "Register Successfully", success: true });
-  } catch (error) {
+  } 
+  catch (error) {
     console.log(error);
     res.status(500).send({
       success: false,
@@ -286,6 +288,22 @@ const paymentController = async (req, res) => {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
+};
+
+
+//reserve 
+const reserveController = async (req, res) => {
+  const newreserve = new reserve ({
+    Username: req.body.Username,
+    SelectClass: req.body.SelectClass,
+    SelectDay: req.body.SelectDay,
+    phoneNumber: req.body.phoneNumber,
+   
+
+  });
+  await newreserve.save();
+  res.status(201).send({ message: "Register Successfully", success: true });
+
 };
 
 
@@ -831,5 +849,6 @@ module.exports = {
   getNewsController,
   getGallController,
   paymentController,
+  reserveController,
   // createClassController
 };

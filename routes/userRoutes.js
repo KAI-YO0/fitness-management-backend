@@ -23,6 +23,7 @@ const {
     getNewsController,
     getGallController,
     paymentController,
+    reserveController,
 } = require('../controller/userCtrl');
 const auth = require('../middlewares/auth');
 
@@ -78,5 +79,6 @@ router.post('/sendContact', auth, sendContactController)
 //payment
 router.post('/payment', auth,  paymentController)
 
+router.post('/reserve',  auth, reserveController)
 
 module.exports = router;
