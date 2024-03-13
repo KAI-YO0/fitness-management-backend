@@ -293,17 +293,29 @@ const paymentController = async (req, res) => {
 
 //reserve 
 const reserveController = async (req, res) => {
-  const newreserve = new reserve ({
-    Username: req.body.Username,
-    SelectClass: req.body.SelectClass,
-    SelectDay: req.body.SelectDay,
-    phoneNumber: req.body.phoneNumber,
-   
+  try {
+    // ค้นหาผู้ใช้จาก userId
+    const user = await userModel.findById(req.body.userId);
 
-  });
-  await newreserve.save();
-  res.status(201).send({ message: "Register Successfully", success: true });
+    if (!user) {
+      return res.status(404).send({ message: "User not found", success: false });
+    }
 
+    const newreserve = new reserve({
+      userId: req.body.userId,
+      firstname: user.firstname,
+      lastname:user.lastname, // เพิ่มการดึงชื่อผู้ใช้ (username) จากข้อมูลผู้ใช้
+      SelectClass: req.body.SelectClass,
+      SelectDay: req.body.SelectDay,
+      phoneNumber: req.body.phoneNumber,
+    });
+
+    await newreserve.save();
+    res.status(201).send({ message: "Register Successfully", success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal Server Error", success: false });
+  }
 };
 
 

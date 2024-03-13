@@ -1,12 +1,20 @@
 
 const mongoose = require("mongoose");
 
+
 const reserveUserSchema = new mongoose.Schema({
 
-  Username:  {
-    type: String,
-    required: [true, 'username is require'],
+  userId: {
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: "users",
+      required: true
   },
+  firstname: {
+    type: String,
+},
+  lastname: {
+    type: String,
+},
   SelectClass: {
     type: String,
     enum: ['RPM' , 'BIKE TOUR' , 'SPIN' , 'BODYPUMP' , 'MAXED TERAIN SPIN' , 'GYMBALL'],
