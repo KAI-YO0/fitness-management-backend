@@ -2,6 +2,7 @@ const userModel = require("../models/userModels");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const classModel = require("../models/classModels");
+const slipModel = require("../models/slipModels");
 const hoteldetailModel = require("../models/hotelDetailModel");
 const groomingModel = require("../models/groomingModel");
 const contactModel = require("../models/contactModel");
@@ -10,7 +11,7 @@ const newsModel = require("../models/newsModel");
 const galleryModel = require("../models/galleryModel");
 // const moment = require("moment");
 const nodemailer = require("nodemailer");
-const payment = require("../models/payment");
+const paymentModel = require("../models/paymentModels");
 const { count } = require("../models/classHasUserModels");
 const reserve = require("../models/reserveClassModel");
 
@@ -236,59 +237,42 @@ const getUserProfileController = async (req, res) => {
   }
 };
 
-// Edit User by ID
+// Create Payment
 
-const userEditController = async (req, res) => {
-  const { username, password , email , firstname , lastname , id_card ,  phone_number ,
-    address , sex , role , member_id } = req.body;
+const createPaymentController = async (req, res) => {
   try {
-    const user = await userModel.findOneAndUpdate(
-      { _id: req.body.userId },
-      { username, password , email , firstname , lastname , id_card ,  phone_number ,
-        address , sex , role , member_id }
-    );
-    res.status(200).send({
-      success: true,
-      message: "แก้ไขข้อมูลสำเร็จ",
-      data: user,
-    });
-  } catch (error) {
-    console.log(error);
-    res.send({
-      success: false,
-      message: "แก้ไขข้อมูลไม่สำเร็จ",
-    });
+    const { userId , email , firstname , lastname } = req.body;
+    const image = req.file;
+
+  // Check if required fields exist
+  if (!userId || !email || !firstname || !lastname || !image) {
+    return res.status(400).json({ success: false, message: "Invalid request data" });
   }
-};
 
-//payment
-const paymentController = async (req, res) => {
-  try {
-    // ตรวจสอบว่า req.body มีค่าและมี property 'image' หรือไม่
-    if (req.body && req.body.image) {
-      const newPayment = new payment({
-        email: req.body.email,
-        address: req.body.address,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        phoneNumber: req.body.phoneNumber,
-        imageType: req.body.imageType,
-      });
+    const PaymentInstance = new paymentModel({
+      userId,
+      email,
+      firstname,
+      lastname,
+      image: { // Make sure image object contains required properties
+        fieldname: image.fieldname,
+        originalname: image.originalname,
+        filename: image.filename,
+        path: image.path
+      },
+    });
 
-      // บันทึกข้อมูลลงในฐานข้อมูล
-      await newPayment.save();
+    // Save data to the database
+    await PaymentInstance.save();
 
-      // ส่งข้อมูลการบันทึกเป็น JSON กลับไป
-      res.status(201).json({ success: true, message: "Payment success" });
-    } else {
-      // ถ้าไม่มี req.body หรือไม่มี property 'image'
-      res.status(400).json({ success: false, message: "Invalid request data" });
-    }
+    // Send JSON response
+    res.status(201).json({ success: true, message: "Payment success" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 };
+
 
 
 // Class reserve 
@@ -572,6 +556,29 @@ const bookGroomingController = async (req, res) => {
   }
 };
 
+// Slip
+
+// create Slip
+const createSlipController = async (req, res) => {
+  try {
+    await slipModel.create({
+      image: req.file.filename,
+    });
+    res.status(200).send({
+      success: true,
+      message: "เพิ่มข้อมูลสำเร็จ",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "เพิ่มข้อมูลไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+
 const isRoomBooked = async (name, description, startDate, endDate) => {
   try {
     const existingBooking = await classModel.findOne({
@@ -844,7 +851,11 @@ module.exports = {
   resetPasswordController,
 
   getUserProfileController,
-  userEditController,
+  // userEditController,
+
+  createSlipController,
+
+  createPaymentController,
 
   classBookedController,
   bookClassController,
@@ -864,7 +875,7 @@ module.exports = {
   deleteBookedGroomingController,
   getNewsController,
   getGallController,
-  paymentController,
+  // paymentController,
   reserveClassController,
   // createClassController
 };

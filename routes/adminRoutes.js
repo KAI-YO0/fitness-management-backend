@@ -84,7 +84,7 @@ router.put('/updateUser/:id', auth, updateRoleUserController);
 router.delete('/deleteUser/:id', auth, deleteUserController);
 
 //news
-router.post('/createNews', auth, upload.single('filename'), createNewsController);
+// router.post('/createNews', auth, upload.single('filename'), createNewsController);
 router.get('/getNews', auth, getNewsController);
 router.get('/editNews/:id', auth, editNewsController);
 router.put('/updateNews/:id', auth, upload.single('filename'), updateNewsController);

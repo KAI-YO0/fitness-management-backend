@@ -1,9 +1,13 @@
-const express = require('express')
+const express = require('express');
+const auth = require('../middlewares/auth');
+const multer = require('multer');
+const path = require('path');
 const {
     loginController, 
     signupController,
     authController, 
     bookClassController,
+    createSlipController,
     bookGroomingController, 
     getAllNotiController,
     deleteAllNotiController,
@@ -22,13 +26,28 @@ const {
     deleteBookedGroomingController,
     getNewsController,
     getGallController,
-    paymentController,
+    createPaymentController,
     reserveClassController,
 } = require('../controller/userCtrl');
-const auth = require('../middlewares/auth');
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+    destination: (req, file, cd) => {
+      // cd(null, "C:/programing/fullstack/projectdraft/petegory/public/images");
+      cd(null, process.env.PATH_IMAGES_FOGUS);
+    },
+    filename: (req, file, cd) => {
+      cd(
+        null,
+        file.fieldname + '_' + Date.now() + path.extname(file.originalname)
+      );
+    },
+  });
+  
+  const upload = multer({
+    storage: storage,
+  });
 
 router.post('/login', loginController)
 
@@ -37,6 +56,12 @@ router.post('/signup', signupController)
 //auth user
 router.post('/getUserData', auth, authController)
 
+// slip
+// router.post('/createNews', auth, upload.single('filename'), createNewsController); 
+
+//payment
+router.post('/createPayment', auth ,createPaymentController)
+ 
 //Booking Class
 router.post('/reserveClass',  auth, reserveClassController)
 
@@ -70,13 +95,11 @@ router.post('/resetPassword/:id/:token', resetPasswordController)
 
 // user profile
 router.get('/getUserProfile', auth, getUserProfileController)
-router.post('/editUser', auth, userEditController)
+// router.post('/editUser', auth, userEditController)
 
 //send contact
 router.post('/sendContact', auth, sendContactController)
 
-//payment
-router.post('/payment', auth,  paymentController)
 
 
 

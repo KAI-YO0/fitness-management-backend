@@ -274,26 +274,6 @@ const deleteUserController = async (req, res) => {
 };
 
 
-const createNewsController = async (req, res) => {
-  try {
-    await newsModel.create({
-      image: req.file.filename,
-    });
-    res.status(200).send({
-      success: true,
-      message: "เพิ่มข้อมูลสำเร็จ",
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      success: false,
-      message: "เพิ่มข้อมูลไม่สำเร็จ",
-      error,
-    });
-  }
-};
-
-
 const editNewsController = async (req, res) => {
   try {
     const id = req.params.id;
@@ -1156,7 +1136,7 @@ module.exports = {
   updateBookGroomingController,
   deleteBookedGroomingController,
   sendBookingHistory,
-  createNewsController,
+  // createNewsController,
   getNewsController,
   deleteNewsController,
   editNewsController,
