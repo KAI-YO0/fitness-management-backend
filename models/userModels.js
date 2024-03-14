@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ["member", "admin", "employee", "trainer"],
         // required: [true, 'role is require'],
-        default: "member"
+        // default: "member"
     },
     // isMember: {
     //     type: Boolean,

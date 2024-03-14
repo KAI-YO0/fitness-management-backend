@@ -47,6 +47,7 @@ const {
   deleteGallController,
   getTrainerCountController,
   getAlluserCountController,
+  getreserveClassController,
 
 } = require('../controller/adminCtrl');
 
@@ -135,5 +136,8 @@ router.get('/allBookedHotel', auth, getAllbookingHotelsController);
 router.get('/editBookHotel/:id', auth, editBookHotelController);
 router.put('/updateBookHotel/:id', auth, updateBookHotelController);
 router.delete('/deleteBookHotel/:id', auth, deleteBookHotelController);
+
+//reserveClass
+router.get('/GetallreserveClass', auth , getreserveClassController);
 
 module.exports = router;

@@ -23,7 +23,7 @@ const {
     getNewsController,
     getGallController,
     paymentController,
-    reserveClassController,
+    reserveController,
 } = require('../controller/userCtrl');
 const auth = require('../middlewares/auth');
 
@@ -38,7 +38,7 @@ router.post('/signup', signupController)
 router.post('/getUserData', auth, authController)
 
 //Booking Class
-router.post('/reserveClass',  auth, reserveClassController)
+router.post('/reserveClass',  auth, reserveController)
 
 //Booking Grooming
 router.get('/isTimeBooked', auth, isTimeBookedController)

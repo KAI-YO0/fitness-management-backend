@@ -7,6 +7,7 @@ const hotelModel = require("../models/hotelModel");
 const groomingModel = require("../models/groomingModel");
 const newsModel = require("../models/newsModel");
 const galleryModel = require("../models/galleryModel");
+const reserve = require('../models/reserveClassModel');
 const path = require("path");
 
 
@@ -67,6 +68,24 @@ const getAllTrainerController = async (req, res) => {
       success: false,
       message: "ไม่พบข้อมูล",
       error,
+    });
+  }
+};
+
+//Get reserveclass
+const getreserveClassController = async (req, res) => {
+  try {
+    const reserveClass = await reserve.find({ });
+    res.status(200).send({
+      success: true,
+      message: "get reserve detail",
+      data: reserveClass,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "get reserve error",
     });
   }
 };
@@ -1168,4 +1187,5 @@ module.exports = {
   deleteGallController,
   getTrainerCountController,
   getAlluserCountController,
+  getreserveClassController,
 }
