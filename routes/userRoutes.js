@@ -25,6 +25,7 @@ const {
     paymentController,
     reserveController,
     createPay,
+    getdetailclass,
 } = require('../controller/userCtrl');
 const auth = require('../middlewares/auth');
 const { upload} = require('../middlewares/upload')
@@ -80,6 +81,9 @@ router.post('/sendContact', auth, sendContactController)
 //payment
 router.post('/payment', auth,  paymentController)
 router.post('/upload'  , auth , upload , createPay)
+
+// getDetailClass
+router.get('/datailClass/:id',auth, getdetailclass)
 
 
 module.exports = router;

@@ -755,9 +755,6 @@ const deleteBookedGroomingController = async (req, res) => {
 };
 
 
-
-
-
 const sendContactController = async (req, res) => {
   const { name, email, message } = req.body;
   try {
@@ -831,7 +828,7 @@ const createPay = async (req, res) => {
   try {
     var data = req.body;
     if (req.file) {
-      data.file = req.file.filename;
+      data.image = req.file.path;
     }
     const createdPayment = await payment.create(data);
     res.send(createdPayment);
@@ -840,6 +837,26 @@ const createPay = async (req, res) => {
     res.status(500).send('server Error');
   }
 };
+
+//GetbookingClass by id
+
+const getdetailclass = async (req, res) => {
+  try {
+    const user = await reserve.find({ userId: req.body.userId });
+    res.status(200).send({
+      success: true,
+      message: "get detail Booking",
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "get user error",
+    });
+  }
+};
+
 
 module.exports = {
 
@@ -876,4 +893,5 @@ module.exports = {
   reserveController,
   // createClassController
   createPay,
+  getdetailclass,
 };

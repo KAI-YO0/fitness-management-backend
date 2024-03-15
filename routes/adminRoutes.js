@@ -48,6 +48,13 @@ const {
   getTrainerCountController,
   getAlluserCountController,
   getreserveClassController,
+  getclassRPM,
+  getclassBiketour,
+  getclassSpin,
+  getclassBodypump,
+  getclassMIXEDTERRAINSPIN,
+  getclassGymball,
+  getAllreceiptsController,
 
 } = require('../controller/adminCtrl');
 
@@ -139,5 +146,14 @@ router.delete('/deleteBookHotel/:id', auth, deleteBookHotelController);
 
 //reserveClass
 router.get('/GetallreserveClass', auth , getreserveClassController);
+router.get('/Getclassrpm' , auth , getclassRPM);
+router.get('/GetclassBiketour' ,auth , getclassBiketour)
+router.get('/GetclassSpin' ,auth , getclassSpin)
+router.get('/GetclassBodypump' , auth , getclassBodypump)
+router.get('/Getclassmixedterrainspin' , auth , getclassMIXEDTERRAINSPIN)
+router.get('/GetclassGymball' , auth , getclassGymball)
+
+router.get('/Getreceipt' , auth , getAllreceiptsController)
+
 
 module.exports = router;

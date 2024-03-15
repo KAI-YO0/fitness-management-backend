@@ -8,7 +8,7 @@ const groomingModel = require("../models/groomingModel");
 const newsModel = require("../models/newsModel");
 const galleryModel = require("../models/galleryModel");
 const reserve = require('../models/reserveClassModel');
-const path = require("path");
+const payment = require('../models/payment');
 
 
 
@@ -1138,6 +1138,140 @@ const sendBookingHistory = async (req, res) => {
   }
 };
 
+//GetclassRPM
+
+const getclassRPM = async (req, res) => {
+  try {
+    const rpmClasses = await reserve.find({ SelectClass: "RPM" });
+    res.status(200).send({
+      success: true,
+      message: "ClassesRPM",
+      data: rpmClasses,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
+//getclassBiketour
+const getclassBiketour = async (req, res) => {
+  try {
+    const BiketourClasses = await reserve.find({ SelectClass: "BIKE TOUR" });
+    res.status(200).send({
+      success: true,
+      message: "ClassesBiketour",
+      data: BiketourClasses,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
+//getclassSpin
+const getclassSpin = async (req, res) => {
+  try {
+    const SpinClasses = await reserve.find({ SelectClass: "SPIN" });
+    res.status(200).send({
+      success: true,
+      message: "classSpin",
+      data: SpinClasses,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
+//getclassBodypump
+const getclassBodypump = async (req, res) => {
+  try {
+    const BodypumpClasses = await reserve.find({ SelectClass: "BODYPUMP" });
+    res.status(200).send({
+      success: true,
+      message: "classBodypump",
+      data: BodypumpClasses,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
+//getclassMIXEDTERRAINSPIN
+const getclassMIXEDTERRAINSPIN = async (req, res) => {
+  try {
+    const mixedterrainspinClasses = await reserve.find({ SelectClass: "MIXED TERRAIN SPIN" });
+    res.status(200).send({
+      success: true,
+      message: "classmixedterrainspin",
+      data: mixedterrainspinClasses,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
+//getclassGymball
+const getclassGymball = async (req, res) => {
+  try {
+    const classGymball = await reserve.find({ SelectClass: "GYMBALL" });
+    res.status(200).send({
+      success: true,
+      message: "classGymball",
+      data: classGymball,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
+//Getreceipt
+const getAllreceiptsController = async (req, res) => {
+  try {
+    const users = await payment.find({})
+    res.status(200).send({
+      success: true,
+      message: "listreceipt",
+      data: users,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ไม่พบข้อมูล",
+      error,
+    });
+  }
+};
+
 module.exports = {
   getAllUsersController,
   getAllEmployeeController,
@@ -1188,4 +1322,13 @@ module.exports = {
   getTrainerCountController,
   getAlluserCountController,
   getreserveClassController,
+  getclassRPM,
+  getclassBiketour,
+  getclassSpin,
+  getclassBodypump,
+  getclassMIXEDTERRAINSPIN,
+  getclassGymball,
+  getAllreceiptsController,
+  
+  
 }
