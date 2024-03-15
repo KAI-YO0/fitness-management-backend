@@ -827,6 +827,19 @@ const getGallController = async (req, res) => {
   }
 };
 
+const createPay = async (req, res) => {
+  try {
+    var data = req.body;
+    if (req.file) {
+      data.file = req.file.filename;
+    }
+    const createdPayment = await payment.create(data);
+    res.send(createdPayment);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('server Error');
+  }
+};
 
 module.exports = {
 
@@ -862,4 +875,5 @@ module.exports = {
   paymentController,
   reserveController,
   // createClassController
+  createPay,
 };

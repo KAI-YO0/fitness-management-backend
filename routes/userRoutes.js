@@ -24,8 +24,10 @@ const {
     getGallController,
     paymentController,
     reserveController,
+    createPay,
 } = require('../controller/userCtrl');
 const auth = require('../middlewares/auth');
+const { upload} = require('../middlewares/upload')
 
 const router = express.Router();
 
@@ -77,7 +79,7 @@ router.post('/sendContact', auth, sendContactController)
 
 //payment
 router.post('/payment', auth,  paymentController)
-
+router.post('/upload'  , auth , upload , createPay)
 
 
 module.exports = router;

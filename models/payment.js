@@ -15,21 +15,17 @@ const paymentUserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  lastname: {
+  // lastname: {
+  //   type: String,
+  //   required: true,
+  // },
+  // phoneNumber: {
+  //   type: String,
+  //   required: true,
+  // },
+  image: {
     type: String,
-    required: true,
-  },
-  phoneNumber: {
-    type: String,
-    required: true,
-  },
-//   image: {
-//     type: Buffer, // เก็บ binary data
-//     required: true,
-//   },
-  imageType: {
-    type: String, // เก็บประเภทของไฟล์รูปภาพ (เช่น image/jpeg, image/png)
-    required: true,
+    required: false,
   },
 });
 
