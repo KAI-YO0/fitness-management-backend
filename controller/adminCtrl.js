@@ -9,7 +9,7 @@ const newsModel = require("../models/newsModel");
 const galleryModel = require("../models/galleryModel");
 const reserve = require('../models/reserveClassModel');
 const payment = require('../models/payment');
-
+const path = require('path');
 
 
 // Get All User
@@ -1254,13 +1254,39 @@ const getclassGymball = async (req, res) => {
 };
 
 //Getreceipt
+// const getAllreceiptsController = async (req, res) => {
+//   try {
+//     const users = await payment.find({})
+//     res.status(200).send({
+//       success: true,
+//       message: "listreceipt",
+//       data: users,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       success: false,
+//       message: "ไม่พบข้อมูล",
+//       error,
+//     });
+//   }
+// };
+
 const getAllreceiptsController = async (req, res) => {
   try {
-    const users = await payment.find({})
+    const payments = await payment.find({});
+    const data = payments.map(payment => {
+      const imageUrl = `${req.protocol}://${req.get('host')}/upload/${payment.image}`;
+      console.log("imageUrl:", imageUrl); 
+      return {
+        ...payment.toObject(),
+        imageURL: imageUrl
+      };
+    });
     res.status(200).send({
       success: true,
       message: "listreceipt",
-      data: users,
+      data: data,
     });
   } catch (error) {
     console.log(error);
@@ -1270,7 +1296,10 @@ const getAllreceiptsController = async (req, res) => {
       error,
     });
   }
-};
+}
+
+
+
 
 module.exports = {
   getAllUsersController,

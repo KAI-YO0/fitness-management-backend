@@ -828,7 +828,7 @@ const createPay = async (req, res) => {
   try {
     var data = req.body;
     if (req.file) {
-      data.image = req.file.path;
+      data.image = req.file.filename;
     }
     const createdPayment = await payment.create(data);
     res.send(createdPayment);
