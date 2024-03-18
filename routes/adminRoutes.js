@@ -55,6 +55,12 @@ const {
   getclassMIXEDTERRAINSPIN,
   getclassGymball,
   getAllreceiptsController,
+  CountClassRPM,
+  CountClassBiketour,
+  CountClassSpin,
+  CountClassBodypump,
+  CountClassMIXEDTERRAINSPIN,
+  CountClassGymball,
 
 } = require('../controller/adminCtrl');
 
@@ -155,5 +161,21 @@ router.get('/GetclassGymball' , auth , getclassGymball)
 
 router.get('/Getreceipt' , auth , getAllreceiptsController)
 
+//CountClassRPM
+router.get('/CountClassRPM' ,auth , CountClassRPM)
 
+//CountClassBiketour
+router.get('/CountClassBiketour' ,auth , CountClassBiketour)
+
+//CountClassSpin
+router.get('/CountClassSpin' ,auth , CountClassSpin)
+
+//CountClassBodypump
+router.get('/CountClassBodypump' ,auth , CountClassBodypump)
+
+//CountClassMIXEDTERRAINSPIN
+router.get('/CountClassMixedterrainspin' ,auth ,CountClassMIXEDTERRAINSPIN)
+
+//CountClassGymball
+router.get('/CountClassGymball' ,auth , CountClassGymball)
 module.exports = router;

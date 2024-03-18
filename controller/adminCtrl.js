@@ -1299,6 +1299,138 @@ const getAllreceiptsController = async (req, res) => {
 }
 
 
+//CountClassRPM
+const CountClassRPM= async (req, res) => {
+  try {
+    const RpmCount = await reserve
+      .findOne({ SelectClass: "RPM" })
+      .countDocuments();
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: RpmCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+
+//CountClassBIKETOUR
+const CountClassBiketour= async (req, res) => {
+  try {
+    const RpmCount = await reserve
+      .findOne({ SelectClass: "BIKE TOUR" })
+      .countDocuments();
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: RpmCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+//CountClassSPIN
+const CountClassSpin= async (req, res) => {
+  try {
+    const RpmCount = await reserve
+      .findOne({ SelectClass: "SPIN" })
+      .countDocuments();
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: RpmCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+//CountClassBODYPUMP
+const CountClassBodypump= async (req, res) => {
+  try {
+    const RpmCount = await reserve
+      .findOne({ SelectClass: "BODYPUMP" })
+      .countDocuments();
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: RpmCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+//CountClassMIXEDTERRAINSPIN
+const CountClassMIXEDTERRAINSPIN= async (req, res) => {
+  try {
+    const RpmCount = await reserve
+      .findOne({ SelectClass: "MIXED TERRAIN SPIN" })
+      .countDocuments();
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: RpmCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
+
+//CountClassGYMBALL
+const CountClassGymball= async (req, res) => {
+  try {
+    const RpmCount = await reserve
+      .findOne({ SelectClass: "GYMBALL" })
+      .countDocuments();
+
+    res.status(200).send({
+      success: true,
+      message: "จำนวนผู้ใช้ทั้งหมด",
+      data: RpmCount,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "ดึงข้อมูลผู้ใช้ไม่สำเร็จ",
+      error,
+    });
+  }
+};
 
 
 module.exports = {
@@ -1358,6 +1490,12 @@ module.exports = {
   getclassMIXEDTERRAINSPIN,
   getclassGymball,
   getAllreceiptsController,
+  CountClassRPM,
+  CountClassBiketour,
+  CountClassSpin,
+  CountClassBodypump,
+  CountClassMIXEDTERRAINSPIN,
+  CountClassGymball,
   
   
 }
