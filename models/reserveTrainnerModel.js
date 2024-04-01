@@ -14,10 +14,6 @@ const reserveTrainnerSchema = new mongoose.Schema({
   // lastname: {
   //   type: String,
   // },
-  SelectDate: {
-    type: Date, 
-    required: true
-  },
   StartHour: {
     type: Date, 
     required: true
@@ -26,10 +22,10 @@ const reserveTrainnerSchema = new mongoose.Schema({
     type: Date, 
     required: true
   },
-  phoneNumber: {
-    type: String,
-    required: true,
-  },
+  // phoneNumber: {
+  //   type: String,
+  //   required: true,
+  // },
 });
 
 const reserveTrainner = mongoose.model('reserveTrainner', reserveTrainnerSchema);

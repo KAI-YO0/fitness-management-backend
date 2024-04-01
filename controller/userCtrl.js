@@ -17,6 +17,7 @@ const reserveTrainner = require("../models/reserveTrainnerModel");
 
 const { notifyLine } = require("../Functions/Notify");
 const tokenLine = "u8XKBVkQKhCNSeh366fEuQAws7uRj4nxnv2hc7pZss3";
+const tokenmax = "YwwBYwJ5cdGcFBCeLhfMiBVUz98X9IHzX30V92dG0iz";
 
 
 // register
@@ -335,12 +336,55 @@ const reserveTrainnerController = async (req, res) => {
     });
 
     await newreserve.save();
+    const message = `มีการจองเทรนเนอร์ ${user.firstname} ตั้งเเต่ ${req.body.StartHour} ถึง ${req.body.EndHour}`;
+    await notifyLine(tokenmax, message);
     res.status(201).send({ message: "จอง Trainner สำเร็จ", success: true });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Internal Server Error", success: false });
   }
 };
+
+// const reserveTrainnerController = async (req, res) => {
+//   try {
+//     // ตรวจสอบว่าวันที่และเวลาที่ส่งมามีรูปแบบถูกต้องหรือไม่
+//     const SelectDate = new Date(req.body.SelectDate);
+//     const StartHour = new Date(req.body.StartHour);
+//     const EndHour = new Date(req.body.EndHour);
+
+//     if (isNaN(SelectDate.getTime()) || isNaN(StartHour.getTime()) || isNaN(EndHour.getTime())) {
+//       return res.status(400).send({ message: "รูปแบบวันที่หรือเวลาไม่ถูกต้อง", success: false });
+//     }
+
+//     // ตรวจสอบว่าผู้ใช้ซ้ำหรือไม่
+//     const existingReservation = await reserveTrainner.findOne({ userId: req.body.userId });
+//     if (existingReservation) {
+//       return res.status(400).send({ message: "ผู้ใช้มีการจองไปแล้ว", success: false });
+//     }
+
+//     // หาข้อมูลผู้ใช้
+//     const user = await userModel.findById(req.body.userId);
+//     if (!user) {
+//       return res.status(404).send({ message: "ไม่พบผู้ใช้", success: false });
+//     }
+
+//     // สร้างการจองใหม่
+//     const newreserve = new reserveTrainner({
+//       userId: req.body.userId,
+//       firstname: user.firstname,
+//       SelectDate: SelectDate,
+//       StartHour: StartHour,
+//       EndHour: EndHour,
+//       phoneNumber: req.body.phoneNumber,
+//     });
+
+//     await newreserve.save();
+//     res.status(201).send({ message: "จอง Trainer สำเร็จ", success: true });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ message: "เกิดข้อผิดพลาดบางอย่าง", success: false });
+//   }
+// };
 
 
 const classBookedController = async (req, res) => {
@@ -855,7 +899,7 @@ const createPay = async (req, res) => {
     }
     const createdPayment = await payment.create(data);
 
-    const message = `มีการชำระเงินใหม่เข้ามาจาก ${data.email} ${data.firstname}`;
+    const message = `มีการชำระเงินใหม่เข้ามาจาก ${data.email} ${data.phoneNumber}`;
     await notifyLine(tokenLine, message);
     
     res.send(createdPayment);

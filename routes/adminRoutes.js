@@ -139,12 +139,12 @@ router.get('/CountClassGymball' ,auth , CountClassGymball)
 // //all booking dashboard
 // router.get('/getBookingHistory', auth, sendBookingHistory);
 
-// //count dashboard
-// router.get('/getUserCount', auth, getUserCountController);
-// router.get('/getTrainerCount', auth, getTrainerCountController);
-// router.get('/getAlluserCount', auth, getAlluserCountController);
-// router.get('/getBookHotelCount', auth, getBookHotelCountController);
-// router.get('/getBookGroomingCount', auth, getBookGroomingCountController);
+//count dashboard
+router.get('/getUserCount', auth, getUserCountController);
+router.get('/getTrainerCount', auth, getTrainerCountController);
+router.get('/getAlluserCount', auth, getAlluserCountController);
+router.get('/getBookHotelCount', auth, getBookHotelCountController);
+router.get('/getBookGroomingCount', auth, getBookGroomingCountController);
 
 
 // //Booking Grooming
@@ -169,15 +169,15 @@ router.put('/updateEmployee/:id', auth, updateEmployeeController);
 // router.delete('/deleteBookHotel/:id', auth, deleteBookHotelController);
 
 // //reserveClass
-// router.get('/GetallreserveClass', auth , getreserveClassController);
-// router.get('/Getclassrpm' , auth , getclassRPM);
-// router.get('/GetclassBiketour' ,auth , getclassBiketour)
-// router.get('/GetclassSpin' ,auth , getclassSpin)
-// router.get('/GetclassBodypump' , auth , getclassBodypump)
-// router.get('/Getclassmixedterrainspin' , auth , getclassMIXEDTERRAINSPIN)
-// router.get('/GetclassGymball' , auth , getclassGymball)
+router.get('/GetallreserveClass', auth , getreserveClassController);
+router.get('/Getclassrpm' , auth , getclassRPM);
+router.get('/GetclassBiketour' ,auth , getclassBiketour)
+router.get('/GetclassSpin' ,auth , getclassSpin)
+router.get('/GetclassBodypump' , auth , getclassBodypump)
+router.get('/Getclassmixedterrainspin' , auth , getclassMIXEDTERRAINSPIN)
+router.get('/GetclassGymball' , auth , getclassGymball)
 
-// router.get('/Getreceipt' , auth , getAllreceiptsController)
+router.get('/Getreceipt' , auth , getAllreceiptsController)
 
 
 module.exports = router;

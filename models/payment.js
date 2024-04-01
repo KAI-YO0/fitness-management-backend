@@ -11,7 +11,7 @@ const paymentUserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  firstname: {
+  phoneNumber: {
     type: String,
     required: true,
   },
