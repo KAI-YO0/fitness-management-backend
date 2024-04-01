@@ -13,6 +13,7 @@ const nodemailer = require("nodemailer");
 const payment = require("../models/payment");
 const { count } = require("../models/classHasUserModels");
 const reserve = require("../models/reserveClassModel");
+const reserveTrainner = require("../models/reserveTrainnerModel");
 
 const { notifyLine } = require("../Functions/Notify");
 const tokenLine = "u8XKBVkQKhCNSeh366fEuQAws7uRj4nxnv2hc7pZss3";
@@ -308,14 +309,38 @@ const reserveController = async (req, res) => {
     });
 
     await newreserve.save();
-    res.status(201).send({ message: "Register Successfully", success: true });
+    res.status(201).send({ message: "จอง Class สำเร็จ", success: true });
   } catch (error) {
     console.error(error);
     res.status(500).send({ message: "Internal Server Error", success: false });
   }
 };
 
+// Trainner reserve 
+const reserveTrainnerController = async (req, res) => {
+  try {
+    // ค้นหาผู้ใช้จาก userId
+    const user = await userModel.findById(req.body.userId);
+    if (!user) {
+      return res.status(404).send({ message: "User not found", success: false });
+    }
 
+    const newreserve = new reserveTrainner({
+      userId: req.body.userId,
+      firstname: user.firstname,
+      SelectDate: new Date(req.body.SelectDate), // Convert string to Date object
+      StartHour: new Date(req.body.StartHour), // Convert string to Date object
+      EndHour: new Date(req.body.EndHour), // Convert string to Date object
+      phoneNumber: req.body.phoneNumber,
+    });
+
+    await newreserve.save();
+    res.status(201).send({ message: "จอง Trainner สำเร็จ", success: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send({ message: "Internal Server Error", success: false });
+  }
+};
 
 
 const classBookedController = async (req, res) => {
@@ -875,6 +900,8 @@ module.exports = {
 
   classBookedController,
   bookClassController,
+
+  reserveTrainnerController,
 
   bookGroomingController,
   getAllNotiController,

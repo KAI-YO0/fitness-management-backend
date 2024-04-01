@@ -97,70 +97,6 @@ router.get('/editUser/:id', auth, editRoleUserController);
 router.put('/updateUser/:id', auth, updateRoleUserController);
 router.delete('/deleteUser/:id', auth, deleteUserController);
 
-//news
-router.post('/createNews', auth, upload.single('filename'), createNewsController);
-router.get('/getNews', auth, getNewsController);
-router.get('/editNews/:id', auth, editNewsController);
-router.put('/updateNews/:id', auth, upload.single('filename'), updateNewsController);
-router.delete('/deleteNews/:id', auth, deleteNewsController);
-
-//gallery
-router.post('/createGall', auth, upload.single('filename'), createGallController);
-router.get('/getGall', auth, getGallController);
-router.get('/editGall/:id', auth, editGallController);
-router.put('/updateGall/:id', auth, upload.single('filename'), updateGallController);
-router.delete('/deleteGall/:id', auth, deleteGallController);
-
-// hotel details
-router.post('/createHotels', auth, upload.single('filename'), createHotelController);
-router.get('/getHotels', auth, getHotelController);
-router.get('/editHotel/:id', auth, editHotelController);
-router.put('/updateHotel/:id', auth, upload.single('filename'), updateHotelController);
-router.delete('/deleteHotels/:id', auth, deleteHotelsController);
-
-//all booking dashboard
-router.get('/getBookingHistory', auth, sendBookingHistory);
-
-//count dashboard
-router.get('/getUserCount', auth, getUserCountController);
-router.get('/getTrainerCount', auth, getTrainerCountController);
-router.get('/getAlluserCount', auth, getAlluserCountController);
-router.get('/getBookHotelCount', auth, getBookHotelCountController);
-router.get('/getBookGroomingCount', auth, getBookGroomingCountController);
-
-
-//Booking Grooming
-router.get('/allBookedGrooming', auth, getAllbookingGroomingController);
-router.delete('/deleteBookedGrooming/:id', auth, deleteBookedGroomingController);
-router.get('/editBookGrooming/:id', auth, editBookGroomingController);
-router.put('/updateBookGrooming/:id', auth, updateBookGroomingController);
-
-//change status
-router.post('/changeStatus', auth, changeStatusController);
-router.post('/statusBookHotel', auth, statusBookHotelController);
-router.post('/statusBookGrooming', auth, statusBookGroomingController);
-
-//admin get employees
-// router.get('/editEmployee/:id', auth, editEmployeeController);
-router.put('/updateEmployee/:id', auth, updateEmployeeController);
-
-//Booking Hotel
-router.get('/allBookedHotel', auth, getAllbookingHotelsController);
-router.get('/editBookHotel/:id', auth, editBookHotelController);
-router.put('/updateBookHotel/:id', auth, updateBookHotelController);
-router.delete('/deleteBookHotel/:id', auth, deleteBookHotelController);
-
-//reserveClass
-router.get('/GetallreserveClass', auth , getreserveClassController);
-router.get('/Getclassrpm' , auth , getclassRPM);
-router.get('/GetclassBiketour' ,auth , getclassBiketour)
-router.get('/GetclassSpin' ,auth , getclassSpin)
-router.get('/GetclassBodypump' , auth , getclassBodypump)
-router.get('/Getclassmixedterrainspin' , auth , getclassMIXEDTERRAINSPIN)
-router.get('/GetclassGymball' , auth , getclassGymball)
-
-router.get('/Getreceipt' , auth , getAllreceiptsController)
-
 //CountClassRPM
 router.get('/CountClassRPM' ,auth , CountClassRPM)
 
@@ -178,4 +114,70 @@ router.get('/CountClassMixedterrainspin' ,auth ,CountClassMIXEDTERRAINSPIN)
 
 //CountClassGymball
 router.get('/CountClassGymball' ,auth , CountClassGymball)
+
+//news
+// router.post('/createNews', auth, upload.single('filename'), createNewsController);
+// router.get('/getNews', auth, getNewsController);
+// router.get('/editNews/:id', auth, editNewsController);
+// router.put('/updateNews/:id', auth, upload.single('filename'), updateNewsController);
+// router.delete('/deleteNews/:id', auth, deleteNewsController);
+
+//gallery
+// router.post('/createGall', auth, upload.single('filename'), createGallController);
+// router.get('/getGall', auth, getGallController);
+// router.get('/editGall/:id', auth, editGallController);
+// router.put('/updateGall/:id', auth, upload.single('filename'), updateGallController);
+// router.delete('/deleteGall/:id', auth, deleteGallController);
+
+// hotel details
+// router.post('/createHotels', auth, upload.single('filename'), createHotelController);
+// router.get('/getHotels', auth, getHotelController);
+// router.get('/editHotel/:id', auth, editHotelController);
+// router.put('/updateHotel/:id', auth, upload.single('filename'), updateHotelController);
+// router.delete('/deleteHotels/:id', auth, deleteHotelsController);
+
+// //all booking dashboard
+// router.get('/getBookingHistory', auth, sendBookingHistory);
+
+// //count dashboard
+// router.get('/getUserCount', auth, getUserCountController);
+// router.get('/getTrainerCount', auth, getTrainerCountController);
+// router.get('/getAlluserCount', auth, getAlluserCountController);
+// router.get('/getBookHotelCount', auth, getBookHotelCountController);
+// router.get('/getBookGroomingCount', auth, getBookGroomingCountController);
+
+
+// //Booking Grooming
+// router.get('/allBookedGrooming', auth, getAllbookingGroomingController);
+// router.delete('/deleteBookedGrooming/:id', auth, deleteBookedGroomingController);
+// router.get('/editBookGrooming/:id', auth, editBookGroomingController);
+// router.put('/updateBookGrooming/:id', auth, updateBookGroomingController);
+
+// //change status
+// router.post('/changeStatus', auth, changeStatusController);
+// router.post('/statusBookHotel', auth, statusBookHotelController);
+// router.post('/statusBookGrooming', auth, statusBookGroomingController);
+
+//admin get employees
+// router.get('/editEmployee/:id', auth, editEmployeeController);
+router.put('/updateEmployee/:id', auth, updateEmployeeController);
+
+//Booking Hotel
+// router.get('/allBookedHotel', auth, getAllbookingHotelsController);
+// router.get('/editBookHotel/:id', auth, editBookHotelController);
+// router.put('/updateBookHotel/:id', auth, updateBookHotelController);
+// router.delete('/deleteBookHotel/:id', auth, deleteBookHotelController);
+
+// //reserveClass
+// router.get('/GetallreserveClass', auth , getreserveClassController);
+// router.get('/Getclassrpm' , auth , getclassRPM);
+// router.get('/GetclassBiketour' ,auth , getclassBiketour)
+// router.get('/GetclassSpin' ,auth , getclassSpin)
+// router.get('/GetclassBodypump' , auth , getclassBodypump)
+// router.get('/Getclassmixedterrainspin' , auth , getclassMIXEDTERRAINSPIN)
+// router.get('/GetclassGymball' , auth , getclassGymball)
+
+// router.get('/Getreceipt' , auth , getAllreceiptsController)
+
+
 module.exports = router;
