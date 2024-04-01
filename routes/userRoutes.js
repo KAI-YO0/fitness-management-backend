@@ -28,7 +28,7 @@ const {
     getdetailclass,
 } = require('../controller/userCtrl');
 const auth = require('../middlewares/auth');
-const { upload} = require('../middlewares/upload')
+const { upload } = require('../middlewares/upload')
 
 const router = express.Router();
 

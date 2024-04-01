@@ -14,8 +14,8 @@ const payment = require("../models/payment");
 const { count } = require("../models/classHasUserModels");
 const reserve = require("../models/reserveClassModel");
 
-// const { notifyLine } = require("../Functions/Notify");
-// const tokenLine = "5Ir6hjUjIQ6374TGO91Fv1DA7ewZlh5UQodcI8DU65N";
+const { notifyLine } = require("../Functions/Notify");
+const tokenLine = "u8XKBVkQKhCNSeh366fEuQAws7uRj4nxnv2hc7pZss3";
 
 
 // register
@@ -274,11 +274,9 @@ const paymentController = async (req, res) => {
         phoneNumber: req.body.phoneNumber,
         imageType: req.body.imageType,
       });
-
       // บันทึกข้อมูลลงในฐานข้อมูล
       await newPayment.save();
-
-      // ส่งข้อมูลการบันทึกเป็น JSON กลับไป
+      // ส่งข้อมูลการบันทึกเป็น JSON กลับไป  
       res.status(201).json({ success: true, message: "Payment success" });
     } else {
       // ถ้าไม่มี req.body หรือไม่มี property 'image'
@@ -831,6 +829,10 @@ const createPay = async (req, res) => {
       data.image = req.file.filename;
     }
     const createdPayment = await payment.create(data);
+
+    const message = `มีการชำระเงินใหม่เข้ามาจาก ${data.email} ${data.firstname}`;
+    await notifyLine(tokenLine, message);
+    
     res.send(createdPayment);
   } catch (err) {
     console.log(err);
