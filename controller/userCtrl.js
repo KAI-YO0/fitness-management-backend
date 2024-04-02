@@ -928,6 +928,23 @@ const getdetailclass = async (req, res) => {
   }
 };
 
+//Get All teblesTrainer
+const getteblesTrainerController = async (req, res) => {
+  try {
+    const getteblesTrainer = await reserveTrainner.find({ });
+    res.status(200).send({
+      success: true,
+      message: "get reserve Trainner",
+      data: getteblesTrainer,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "get reserve error",
+    });
+  }
+};
 
 module.exports = {
 
@@ -967,4 +984,5 @@ module.exports = {
   // createClassController
   createPay,
   getdetailclass,
+  getteblesTrainerController,
 };

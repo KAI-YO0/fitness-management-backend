@@ -27,6 +27,7 @@ const {
     reserveTrainnerController,
     createPay,
     getdetailclass,
+    getteblesTrainerController,
 } = require('../controller/userCtrl');
 const auth = require('../middlewares/auth');
 const { upload } = require('../middlewares/upload')
@@ -54,6 +55,8 @@ router.post('/upload'  , auth , upload , createPay)
 // getDetailClass
 router.get('/datailClass/:id',auth, getdetailclass)
 
+//getteblesTrainer
+router.get('/getteblesTrainer',auth, getteblesTrainerController)
 
 // //Booking Grooming
 // router.get('/isTimeBooked', auth, isTimeBookedController)
